@@ -1,20 +1,30 @@
 #include "../sts.hpp"
 
-SUITE() {
-    // Reserve
-    std::string* temp = new std::string("temp");
+// One unit
+UNIT() {
+    // One method of the unit
+    METHOD("init", {
+        // One testcase for the method
+        TEST("Not true", [] {
+            ASSERT(true);
+        });
+    });
+    METHOD("clear", {
+        // Init
+        std::string* test = new std::string("hello");
 
-    // Test
-    TEST("math?", [&] {
-        WARN(1 == 1);
-    });
-    TEST("temp should be temp", [&] {
-        ASSERT(*temp == "temp");
-    });
-    TEST("derp", [] {
-        ASSERT(true);
-    });
+        // Test
+        TEST("Is math", [&] {
+            WARN(2 == 1);
+        });
+        TEST("Should be", [&] {
+            ASSERT(*test == "hello");
+        });
+        TEST("Might not be", [] {
+            ASSERT(false);
+        });
 
-    // Cleanup
-    delete temp;
+        // Cleanup
+        delete test;
+    });
 }

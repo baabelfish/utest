@@ -9,24 +9,28 @@
 #define TNAME() COMBINE(a,__LINE__)
 #define INAME() COMBINE(c,__LINE__)
 
-#define SUITE()\
-    static sts::TestRunner Sts(__FILE__);\
+#define UNIT()\
+    static sts::Unit _UNIT(__FILE__);\
     int main()
 
+#define METHOD(NAME, FUNC)\
+    _UNIT.run(NAME, [&](sts::TestRunner& _TESTRUNNER) FUNC)
+
 #define TEST(NAME, FUNC)\
-    Sts.run(NAME, FUNC)
+    _TESTRUNNER.run(NAME, FUNC)
 
 #define WARN(CONDITION)\
-    if (!(CONDITION)) Sts.warn(#CONDITION, __FILE__, __LINE__)
+    if (!(CONDITION)) _TESTRUNNER.warn(#CONDITION)
 
 #define ASSERT(CONDITION)\
-    if (!(CONDITION)) throw sts::Assertion(#CONDITION, __FILE__, __LINE__)
+    if (!(CONDITION)) throw sts::Assertion(#CONDITION)
 
 
 namespace sts {
 namespace Color {
 const std::string DEFAULT = "\033[0m";
 const std::string BOLD = "\033[1m";
+const std::string UNDERLINE = "\033[4m";
 const std::string BLACK = "\033[30m";
 const std::string RED = "\033[31m";
 const std::string GREEN = "\033[32m";
@@ -46,27 +50,83 @@ const std::string BACKGROUND_WHITE = "\033[47m";
 }
 
 namespace Info {
-const std::string WARN_TEXT = Color::YELLOW + " Warning " + Color::DEFAULT;
-const std::string ASSERT_TEXT = Color::BOLD + Color::RED + " Failure " + Color::DEFAULT;
-const std::string LEFT_NOTIFY = Color::WHITE + "» " + Color::DEFAULT;
+const std::string WARN_TEXT = Color::YELLOW + "Warning " + Color::DEFAULT;
+const std::string ASSERT_TEXT = Color::RED + "Failure " + Color::DEFAULT;
+const std::string LEFT_NOTIFY = Color::WHITE + " » " + Color::DEFAULT;
 const std::string RIGHT_NOTIFY = Color::WHITE + " «" + Color::DEFAULT;
+const std::string LEFT_WARN = Color::YELLOW + " » " + Color::DEFAULT;
+const std::string RIGHT_WARN = Color::YELLOW + " «" + Color::DEFAULT;
+const std::string LEFT_FAIL = Color::RED + " » " + Color::DEFAULT;
+const std::string RIGHT_FAIL = Color::RED + " «" + Color::DEFAULT;
+const std::string TOTAL_SUCCESS = Color::GREEN + "SUCCESS" + Color::DEFAULT;
+const std::string TOTAL_WARNING = Color::YELLOW + "WARNING" + Color::DEFAULT;
+const std::string TOTAL_FAILURE = Color::BOLD + Color::RED + "FAILURE" + Color::DEFAULT;
+const std::string SEPARATOR = Color::GREEN + " - " + Color::DEFAULT;
 } // namespace Info
 
 struct Assertion : std::runtime_error {
-    int m_line;
-    std::string m_file;
-
-    Assertion(std::string condition, std::string file, int line):
-        std::runtime_error(condition),
-        m_line(line),
-        m_file(file) { }
+    Assertion(std::string condition):
+        std::runtime_error(condition) { }
 };
+
+struct Stats {
+    int successful;
+    int fatal;
+    int errors;
+    int warnings;
+
+    void operator+=(Stats stats) {
+        successful += stats.successful;
+        fatal += stats.fatal;
+        errors += stats.errors;
+        warnings += stats.warnings;
+    }
+};
+
+void printAssertion(std::string method, std::string mcase, std::string condition) {
+    std::cout
+        << Info::ASSERT_TEXT
+        << Color::BOLD << Color::MAGENTA << method
+        << Info::SEPARATOR
+        << Color::WHITE << mcase
+        << Info::LEFT_FAIL << condition << Info::RIGHT_FAIL
+        << std::endl;
+}
+
+void printWarning(std::string method, std::string mcase, std::string condition) {
+    std::cout
+        << Info::WARN_TEXT
+        << Color::BOLD << Color::MAGENTA << method
+        << Info::SEPARATOR
+        << Color::WHITE << mcase
+        << Info::LEFT_WARN << condition << Info::RIGHT_WARN
+        << std::endl;
+}
+
+void printStart(std::string unit) {
+    std::cout << Color::UNDERLINE << "Unit: "
+        << Color::WHITE << Color::BOLD
+        << unit << Color::DEFAULT << std::endl;
+}
+
+void printTotal(Stats stats) {
+    int total = stats.errors + stats.successful + stats.fatal + stats.warnings;
+    std::cout << "== ";
+    if (stats.successful == total) {
+        std::cout << Info::TOTAL_SUCCESS;
+    } else if (stats.successful + stats.warnings == total) {
+        std::cout << Info::TOTAL_WARNING;
+    } else {
+        std::cout << Info::TOTAL_FAILURE;
+    }
+    std::cout << " ==" << std::endl;
+}
 
 class TestRunner {
 public:
     TestRunner(std::string name):
-        m_name(name),
-        m_current_testfile(name),
+        m_method(name),
+        m_case(""),
         m_current_test(1),
         m_successful(0),
         m_fatal(0),
@@ -75,33 +135,16 @@ public:
     }
 
     virtual ~TestRunner() {
-        int total = m_successful + m_fatal + m_errors;
-        std::cout << m_name;
-        if (total == m_successful) {
-            std::cout << Color::GREEN << " Success";
-        } else {
-            std::cout << " ("
-                << Color::BOLD << Color::GREEN << m_successful
-                << " " << Color::RED << m_fatal << Color::DEFAULT
-                << " " << Color::RED << m_errors
-                << " " << Color::YELLOW << m_warnings
-                << Color::DEFAULT << ")";
-            std::cout << Color::BOLD << Color::RED << " Fail";
-        }
-        std::cout << Color::DEFAULT << std::endl;
     }
 
     void run(std::string name, std::function<void()> func) {
-        m_current_testfile = name;
+        m_case = name;
         try {
             func();
             ++m_successful;
         }
         catch(Assertion e) {
-            std::cout << e.m_file << "@" << name << ":" << e.m_line
-                << Info::ASSERT_TEXT
-                << Color::DEFAULT << Info::LEFT_NOTIFY << e.what() << Info::RIGHT_NOTIFY
-                << Color::DEFAULT << std::endl;
+            printAssertion(m_method, m_case, e.what());
             ++m_errors;
         }
         catch(...) {
@@ -111,18 +154,42 @@ public:
         ++m_current_test;
     }
 
-    void warn(std::string condition, std::string file, int line) {
-        std::cout << file << "@" << m_current_testfile << ":" << line << Info::WARN_TEXT << Info::LEFT_NOTIFY << condition << Info::RIGHT_NOTIFY << std::endl;
+    void warn(std::string condition) {
+        printWarning(m_method, m_case, condition);
         ++m_warnings;
     }
 
+    Stats stats() const {
+        return { m_successful, m_fatal, m_errors, m_warnings };
+    }
+
 private:
-    std::string m_name;
-    std::string m_current_testfile;
+    std::string m_method;
+    std::string m_case;
     int m_current_test;
     int m_successful;
     int m_fatal;
     int m_errors;
     int m_warnings;
+};
+
+class Unit {
+public:
+    Unit(std::string filename) {
+        printStart(filename);
+    }
+
+    ~Unit() {
+        printTotal(m_total);
+    }
+
+    void run(std::string method, std::function<void(TestRunner&)> func) {
+        TestRunner runner(method);
+        func(runner);
+        m_total += runner.stats();
+    }
+
+private:
+    Stats m_total;
 };
 } // namespace sts
