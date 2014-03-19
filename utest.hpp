@@ -9,21 +9,19 @@ void test(std::function<void()> f) {
     _RUNNERS.emplace_back("", f);
 }
 
-static const std::string _PREFIX = "[" + std::string(__FILE__) + "]";
-
-void printLine(std::size_t line, std::string condition, std::string effect) {
-    std::cout << _PREFIX << ":" << line << ": \"" << Color::BOLD << Color::GREEN << condition << Color::DEFAULT << "\" -> " << effect << Color::DEFAULT << std::endl;
+void printLine(std::string file, std::size_t line, std::string condition, std::string effect) {
+    std::cout << "[" << file << "]" << ":" << line << ": \"" << Color::BOLD << Color::GREEN << condition << Color::DEFAULT << "\" -> " << effect << Color::DEFAULT << std::endl;
 }
 
 #define Assert(CONDITION)\
 if (!(CONDITION)) {\
-    printLine(__LINE__, (#CONDITION), Color::RED + Color::BOLD + "FAILURE");\
-    throw sts::Fatal(#CONDITION);\
+    printLine(__FILE__, __LINE__, (#CONDITION), Color::RED + Color::BOLD + "FAILURE");\
+    throw std::runtime_error(#CONDITION);\
 }
 
 #define Warn(CONDITION)\
 if (!(CONDITION)) {\
-    printLine(__LINE__, (#CONDITION), Color::YELLOW + Color::BOLD + "WARNING");\
+    printLine(__FILE__, __LINE__, (#CONDITION), Color::YELLOW + Color::BOLD + "WARNING");\
 }
 
 #define uTest()\

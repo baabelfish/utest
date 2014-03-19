@@ -1,7 +1,6 @@
 #pragma once
 
-#include "ds.hpp"
-#include <vector>
+#include <functional>
 #include <string>
 
 class Runner {
