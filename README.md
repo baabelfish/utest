@@ -24,7 +24,7 @@ g++ -std=c++11 -o runner something_test.cpp && ./runner
 ```
 - Run multiple tests:
 ```bash
-for i in $(find *.hpp); do g++ -std=c++11 -o runner $i && ./runner; done
+for i in $(find *_test.cpp); do g++ -std=c++11 -o runner $i && ./runner; done
 ```
 
 # Todo

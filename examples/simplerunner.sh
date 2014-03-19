@@ -1,17 +1,13 @@
 #!/bin/bash
-TESTS='tests'
-TESTBIN='tests/.test'
 FLAGS='-g -std=c++11 -I./include'
 CC='g++'
 
 ################################################################################
-TESTS=($(find $TESTS -type f -name '*.cpp'|grep -v 'tests/utest/examples'))
+T_UNITS=($(find *_test.cpp))
+T_CI=($(find *_CI.cpp))
 NUMBER=1
 
 clear
-
-for i in ${TESTS[@]}; do
-    $CC $FLAGS -o $TESTBIN $i $(grep '// UTESTINC: ' $i|cut -f2 -d ':')
-    $1 $TESTBIN
-    echo ""
-done
+for i in $T_UNITS; do $CC $FLAGS -o runner $i && ./runner; done
+for i in $T_CI; do $CC $FLAGS -o runner $i && ./runner; done
+rm -f runner
