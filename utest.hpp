@@ -27,11 +27,9 @@ if (!(CONDITION)) {\
 #define uTest()\
 void _INITIALIZE();\
 int main() {\
-    Runner::Status status{0, 0};\
     _INITIALIZE();\
     for (auto& x : _RUNNERS) {\
         if (!x.run()) return 1;\
-        status = status + x.status();\
     }\
     std::cout << std::endl;\
     return 0;\
