@@ -1,30 +1,21 @@
 #include "../utest.hpp"
+#include <vector>
 
-// One unit
-UNIT() {
-    // One method of the unit
-    METHOD("init", {
-        // One testcase for the method
-        TEST("Not true", [] {
-            ASSERT(true);
-        });
+uTest() {
+    test([]{
+        Warn(1 == 2);
+        Warn(1 == 1);
     });
-    METHOD("clear", {
-        // Init
-        std::string* test = new std::string("hello");
 
-        // Test
-        TEST("Is math", [&] {
-            WARN(2 == 1);
-        });
-        TEST("Should be", [&] {
-            ASSERT(*test == "hello");
-        });
-        TEST("Might not be", [] {
-            ASSERT(false);
-        });
+    test([]{
+        std::vector<int> vec;
+        Assert(vec.empty());
 
-        // Cleanup
-        delete test;
+        vec.push_back(1);
+        vec.push_back(2);
+
+        Assert(vec.size() == 2);
+        Assert(vec[0] == 1 && vec[1] == 2);
+        Assert(vec.size() > 2);
     });
 }
