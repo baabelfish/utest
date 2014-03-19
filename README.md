@@ -4,7 +4,7 @@ uTest
 This is a simple test "library" for lazy people why don't like writing unit tests.
 
 # Usage
-- Create a test `something\_test.cpp`:
+- Create a test `something_test.cpp`:
 ```cpp
 // Include it
 #include "utest.hpp"
@@ -20,7 +20,7 @@ uTest() {
 ```
 - Compile:
 ```bash
-g++ -std=c++11 -o runner examples/case.cpp
+g++ -std=c++11 -o runner something_test.cpp
 ```
 - Run multiple tests:
 ```bash
