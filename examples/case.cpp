@@ -1,3 +1,6 @@
+// Compile with: g++ -std=c++11 -o runner examples/case.cpp
+// Run with ./runner
+
 #include "../utest.hpp"
 #include <vector>
 
@@ -7,7 +10,7 @@ uTest() {
         Warn(1 == 1);
     });
 
-    test([]{
+    test([&]{
         std::vector<int> vec;
         Assert(vec.empty());
 
