@@ -1,7 +1,7 @@
 uTest
 =====
 
-This is a simple test "library" for lazy people why don't like writing unit tests.
+A simple test "library" for lazy people who don't like writing tests.
 
 # Usage
 - Create a test `something_test.cpp`:
@@ -18,9 +18,9 @@ uTest() {
     });
 }
 ```
-- Compile:
+- Compile and run:
 ```bash
-g++ -std=c++11 -o runner something_test.cpp
+g++ -std=c++11 -o runner something_test.cpp && ./runner
 ```
 - Run multiple tests:
 ```bash
