@@ -28,5 +28,7 @@ for i in $(find *_test.cpp); do g++ -std=c++11 -o runner $i && ./runner; done
 ```
 
 # Todo
+- Add timeout
+- Add timed comparisons
 - Add time complexity testing
 - Support for container -> container testing
