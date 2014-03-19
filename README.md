@@ -6,6 +6,9 @@ This is a simple test "library" for lazy people why don't like writing unit test
 # Usage
 - Create a test `something\_test.cpp`:
 ```cpp
+// Include it
+#include "utest.hpp"
+
 // Initializes everything (only one per file)
 uTest() {
     // Add tests into it
