@@ -26,7 +26,7 @@ if (!(CONDITION)) {\
     printLine(__LINE__, (#CONDITION), Color::YELLOW + Color::BOLD + "WARNING");\
 }
 
-#define Utest()\
+#define uTest()\
 void _INITIALIZE();\
 int main() {\
     Runner::Status status{0, 0};\
