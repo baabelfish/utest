@@ -15,8 +15,14 @@ uTest() {
     });
 }
 ```
-- Compile it with `g++ -std=c++11 -o runner examples/case.cpp`
-- Run multiple files with bash: `for i in $(find *.hpp); do g++ -std=c++11 -o runner $i && ./runner; done`
+- Compile:
+```bash
+g++ -std=c++11 -o runner examples/case.cpp
+```
+- Run multiple tests:
+```bash
+for i in $(find *.hpp); do g++ -std=c++11 -o runner $i && ./runner; done
+```
 
 # Todo
 - Add time complexity testing
