@@ -29,3 +29,5 @@ const std::string BACKGROUND_MAGENTA = "\033[45m";
 const std::string BACKGROUND_CYAN = "\033[46m";
 const std::string BACKGROUND_WHITE = "\033[47m";
 }
+
+#define COMBINE(x, y) x##y

@@ -24,7 +24,7 @@ void abstract() {
     });
 }
 
-uTest() {
+uTestPackage([]{
     describe("std::vector", abstract<std::vector<int>>);
     describe("std::deque", abstract<std::deque<int>>);
 
@@ -46,7 +46,7 @@ uTest() {
 
             Assert()
                 .isEqual(fvec.size(), (std::size_t)4)
-                .forAll(fvec, [](int a) { return a == 1; });
+                .forAll(fvec, [](int a) { return a == 2; });
         });
     });
-}
+});

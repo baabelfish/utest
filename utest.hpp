@@ -1,91 +1,88 @@
 #pragma once
 
-#include "assertion.hpp"
-#include "exception.hpp"
-#include "runner.hpp"
-#include "misc.hpp"
+#include "util/assertion.hpp"
+#include "util/exception.hpp"
+#include "util/misc.hpp"
+#include "util/package.hpp"
 
-static int _FAILED = 0;
-static std::vector<Runner> _DESCRIPTIONS;
-static std::string _TFILE = "";
-static std::string _DESCRIPTION = "";
+#define uTestPackage(...) static Package pkg(__FILE__, __VA_ARGS__)
+#define describe(...) uTest::_describe(__VA_ARGS__)
+#define it(...) uTest::_it(__VA_ARGS__)
 
-static std::string lineNumber(int number) {
-    if (number > 0) { return " ( " + std::to_string(number) + ")"; }
-    return "";
-}
+namespace {
+    struct Description {
+        std::string description;
+        std::function<void()> func;
+    };
 
-static void printHeader() {
-    std::cerr
-        << "[" << _TFILE << "] "
-        << Color::WHITE
-        << "(" << Runner::current();
-    if (!_DESCRIPTION.empty()) { std::cerr << " | " << _DESCRIPTION; }
-    std::cerr << ") ";
-}
+class uTest {
+    static int Failed;
+    static std::string CurrentDescription;
+    static std::string CurrentTest;
 
-static void printAssertion(Exception& e) {
-    printHeader();
-    if (e.type == Type::Error) { std::cerr << Color::RED << "Assertion"; }
-    else { std::cerr << Color::BOLD << Color::RED << "Fatal assertion"; }
-    if (!e.reason.empty()) {
-        std::cerr
-            << ": "
-            << Color::DEFAULT
-            << e.reason;
+public:
+    static std::string lineNumber(int number) {
+        if (number > 0) { return " ( " + std::to_string(number) + ")"; }
+        return "";
     }
-    std::cerr << lineNumber(e.line) << std::endl;
-}
 
-void describe(std::string description, std::function<void()> f) {
-    _DESCRIPTIONS.emplace_back(description, f);
-}
+    static void printHeader() {
+        std::cerr
+            << "[" << Package::CurrentFile << "] "
+            << Color::WHITE
+            << "(" << CurrentDescription
+            << " | " << CurrentTest
+            << ") ";
+    }
 
-void it(std::string description, std::function<void()> f) {
-    _DESCRIPTION = description;
-    try {
+    static void printAssertion(Exception& e) {
+        printHeader();
+        if (e.type == Type::Error) { std::cerr << Color::RED << "Assertion"; }
+        else { std::cerr << Color::BOLD << Color::RED << "Fatal assertion"; }
+        if (!e.reason.empty()) {
+            std::cerr
+                << ": "
+                << Color::DEFAULT
+                << e.reason;
+        }
+        std::cerr << lineNumber(e.line) << std::endl;
+    }
+
+    static void _describe(std::string description, std::function<void()> f) {
+        CurrentDescription = description;
         f();
-    } catch (Exception& e) {
-        ++_FAILED;
-        if (e.type == Type::Error) {
-            printAssertion(e);
-        } else {
-            printAssertion(e);
-            throw e;
+    }
+
+    static void _it(std::string description, std::function<void()> f) {
+        CurrentTest = description;
+        try {
+            f();
+        } catch (Exception& e) {
+            ++Failed;
+            if (e.type == Type::Error) {
+                printAssertion(e);
+            } else {
+                printAssertion(e);
+                throw e;
+            }
         }
     }
+};
+
+int uTest::Failed = 0;
+std::string uTest::CurrentDescription;
+std::string uTest::CurrentTest;
 }
 
-/**
- * @brief Prints a warning when untrue.
- *
- * @param CONDITION Expression to test.
- *
- * @return
- */
 #define Warn(CONDITION)\
 if (!(CONDITION)) {\
-    printHeader();\
+    uTest::printHeader();\
     std::cerr\
         << Color::YELLOW + "Warning: " + Color::DEFAULT\
         << Color::DEFAULT\
         << "\"" << (#CONDITION) << "\"" \
-        << lineNumber(__LINE__)\
+        << uTest::lineNumber(__LINE__)\
         << std::endl;\
 }
 
-/**
- * @brief An initializer for the test. Only one per file.
- *
- */
-#define uTest()\
-void _INITIALIZE();\
-int main() {\
-    _TFILE = __FILE__;\
-    _INITIALIZE();\
-    for (auto& x : _DESCRIPTIONS) {\
-        if (!x.run()) return 1;\
-    }\
-    return _FAILED != 0;\
-}\
-void _INITIALIZE()
+#define uTestRun() int main() {}

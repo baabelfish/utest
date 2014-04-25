@@ -10,8 +10,8 @@ A simple test "library" for lazy people who don't like writing tests.
 // Include it
 #include "utest.hpp"
 
-// Initializes everything (only one per file)
-uTest() {
+// Initialize a package
+uTestPackage() {
     describe("Foo", []{
         int x = 5;
         std::vector<int> y{1, 2, 3};
@@ -30,8 +30,10 @@ uTest() {
         })
     });
 }
+
+uTestLaunch();
 ```
-- More comprehensive test: [case.cpp](/examples/case.cpp)
+- More comprehensive test: [case.cpp](/examples/tests.cpp) [case.cpp](/examples/case.cpp) (compiled with: `clang++ -std=c++11 -o runner examples/tests.cpp examples/case.cpp`)
 - Compile and run:
 ```bash
 g++ -std=c++11 -o runner something_test.cpp && ./runner
