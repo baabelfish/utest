@@ -66,13 +66,13 @@ public:
 
     template<typename T>
     Assertion& isTrue(const T& a) {
-        if (!a) { throwEx("isTrue"); }
+        if (a == true) { throwEx("isTrue"); }
         return *this;
     }
 
     template<typename T>
     Assertion& isFalse(const T& a) {
-        if (!a) { throwEx("isTrue"); }
+        if (a == false) { throwEx("isTrue"); }
         return *this;
     }
 };
