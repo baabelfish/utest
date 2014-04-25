@@ -72,7 +72,7 @@ public:
 
     template<typename T>
     Assertion& isFalse(const T& a) {
-        if (a == false) { throwEx("isTrue"); }
+        if (a == false) { throwEx("isFalse"); }
         return *this;
     }
 };

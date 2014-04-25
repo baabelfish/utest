@@ -3,7 +3,12 @@
 uTestPackage([]{
     describe("asd", []{
         it("qwe", []{
-            Assert().isEqual(true, false);
+            Assert()
+                .isTrue(true)
+                .isTrue(false)
+                .isFalse(true)
+                .isFalse(false)
+                .isEqual(true, false);
         });
     });
 });
