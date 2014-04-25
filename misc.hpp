@@ -29,19 +29,3 @@ const std::string BACKGROUND_MAGENTA = "\033[45m";
 const std::string BACKGROUND_CYAN = "\033[46m";
 const std::string BACKGROUND_WHITE = "\033[47m";
 }
-
-namespace Info {
-const std::string WARN_TEXT = Color::YELLOW + "Warning " + Color::DEFAULT;
-const std::string ASSERT_TEXT = Color::RED + "Failure " + Color::DEFAULT;
-const std::string LEFT_NOTIFY = Color::WHITE + " » " + Color::DEFAULT;
-const std::string RIGHT_NOTIFY = Color::WHITE + " «" + Color::DEFAULT;
-const std::string LEFT_WARN = Color::YELLOW + " » " + Color::DEFAULT;
-const std::string RIGHT_WARN = Color::YELLOW + " «" + Color::DEFAULT;
-const std::string LEFT_FAIL = Color::RED + " » " + Color::DEFAULT;
-const std::string RIGHT_FAIL = Color::RED + " «" + Color::DEFAULT;
-const std::string TOTAL_SUCCESS = Color::GREEN + "SUCCESS" + Color::DEFAULT;
-const std::string TOTAL_WARNING = Color::YELLOW + "WARNING" + Color::DEFAULT;
-const std::string TOTAL_FAILURE = Color::BOLD + Color::RED + "FAILURE" + Color::DEFAULT;
-const std::string SEPARATOR = Color::GREEN + " - " + Color::DEFAULT;
-} // namespace Info
-

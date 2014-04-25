@@ -1,34 +1,59 @@
 #pragma once
 
-#include "misc.hpp"
+#include "assertion.hpp"
+#include "exception.hpp"
 #include "runner.hpp"
+#include "misc.hpp"
 
-static std::vector<Runner> _RUNNERS;
+static int _FAILED = 0;
+static std::vector<Runner> _DESCRIPTIONS;
+static std::string _TFILE = "";
+static std::string _DESCRIPTION = "";
 
-/**
- * @brief Adds a test to be run.
- *
- * @param f A function to run. Use assert-macros for testing.
- *
- */
-void test(std::function<void()> f) {
-    _RUNNERS.emplace_back("", f);
+static std::string lineNumber(int number) {
+    if (number > 0) { return " ( " + std::to_string(number) + ")"; }
+    return "";
 }
 
-void _PRINTCON(std::string file, std::size_t line, std::string condition, std::string effect) {
-    std::cout << "[" << file << "]" << ":" << line << ": \"" << Color::BOLD << Color::GREEN << condition << Color::DEFAULT << "\" -> " << effect << Color::DEFAULT << std::endl;
+static void printHeader() {
+    std::cerr
+        << "[" << _TFILE << "] "
+        << Color::WHITE
+        << "(" << Runner::current();
+    if (!_DESCRIPTION.empty()) { std::cerr << " | " << _DESCRIPTION; }
+    std::cerr << ") ";
 }
 
-/**
- * @brief Stops when untrue.
- *
- * @param CONDITION Expression to test.
- *
- */
-#define Assert(CONDITION)\
-if (!(CONDITION)) {\
-    _PRINTCON(__FILE__, __LINE__, (#CONDITION), Color::RED + Color::BOLD + "FAILURE");\
-    throw std::runtime_error(#CONDITION);\
+static void printAssertion(Exception& e) {
+    printHeader();
+    if (e.type == Type::Error) { std::cerr << Color::RED << "Assertion"; }
+    else { std::cerr << Color::BOLD << Color::RED << "Fatal assertion"; }
+    if (!e.reason.empty()) {
+        std::cerr
+            << ": "
+            << Color::DEFAULT
+            << e.reason;
+    }
+    std::cerr << lineNumber(e.line) << std::endl;
+}
+
+void describe(std::string description, std::function<void()> f) {
+    _DESCRIPTIONS.emplace_back(description, f);
+}
+
+void it(std::string description, std::function<void()> f) {
+    _DESCRIPTION = description;
+    try {
+        f();
+    } catch (Exception& e) {
+        ++_FAILED;
+        if (e.type == Type::Error) {
+            printAssertion(e);
+        } else {
+            printAssertion(e);
+            throw e;
+        }
+    }
 }
 
 /**
@@ -40,7 +65,13 @@ if (!(CONDITION)) {\
  */
 #define Warn(CONDITION)\
 if (!(CONDITION)) {\
-    _PRINTCON(__FILE__, __LINE__, (#CONDITION), Color::YELLOW + Color::BOLD + "WARNING");\
+    printHeader();\
+    std::cerr\
+        << Color::YELLOW + "Warning: " + Color::DEFAULT\
+        << Color::DEFAULT\
+        << "\"" << (#CONDITION) << "\"" \
+        << lineNumber(__LINE__)\
+        << std::endl;\
 }
 
 /**
@@ -50,11 +81,11 @@ if (!(CONDITION)) {\
 #define uTest()\
 void _INITIALIZE();\
 int main() {\
+    _TFILE = __FILE__;\
     _INITIALIZE();\
-    for (auto& x : _RUNNERS) {\
+    for (auto& x : _DESCRIPTIONS) {\
         if (!x.run()) return 1;\
     }\
-    std::cout << std::endl;\
-    return 0;\
+    return _FAILED != 0;\
 }\
 void _INITIALIZE()

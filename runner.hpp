@@ -2,6 +2,8 @@
 
 #include <functional>
 #include <string>
+#include "exception.hpp"
+#include "misc.hpp"
 
 class Runner {
 public:
@@ -10,15 +12,21 @@ public:
         m_task(task) {}
 
     bool run() {
+        s_current = m_task;
         try {
             m_test();
-        } catch(std::runtime_error& e) {
+        } catch(...) {
             return false;
         }
         return true;
     }
 
+    static std::string current() { return s_current; }
+
 private:
     std::function<void()> m_test;
     std::string m_task;
+    static std::string s_current;
 };
+
+std::string Runner::s_current;
