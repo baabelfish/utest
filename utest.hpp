@@ -6,8 +6,6 @@
 #include "util/package.hpp"
 
 #define uTestPackage(...) static Package pkg(__FILE__, __VA_ARGS__)
-#define describe(...) uTest::_describe(__VA_ARGS__)
-#define it(...) uTest::_it(__VA_ARGS__)
 
 namespace {
     struct Description {
@@ -73,6 +71,16 @@ int uTest::Failed = 0;
 std::string uTest::CurrentDescription;
 std::string uTest::CurrentTest;
 }
+
+namespace {
+void describe(std::string description, std::function<void()> f) {
+    uTest::_describe(description, f);
+}
+
+void it(std::string description, std::function<void()> f) {
+    uTest::_it(description, f);
+}
+};
 
 #define Warn(CONDITION)\
 if (!(CONDITION)) {\
