@@ -1,2 +1,2 @@
 language: cpp
-script: make && ./utests
+script: clang++ --version && make && ./utests
