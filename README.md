@@ -1,9 +1,8 @@
-uTest
+uTest ![Travis](https://travis-ci.org/baabelfish/utest.svg)
 =====
 
 A simple test "library" for lazy (simple) people who don't like writing tests.
 
-![Travis](https://travis-ci.org/baabelfish/utest.svg)
 
 # Usage
 - Create files
@@ -65,7 +64,4 @@ done
 - More comprehensive test files: [case.cpp](/examples/tests.cpp) [case.cpp](/examples/case.cpp) (compiled with: `clang++ -std=c++11 -o runner examples/tests.cpp examples/case.cpp`)
 
 # Todo
-- Add timeout
-- Add timed comparisons
-- Add time complexity testing
 - Support for container -> container testing
