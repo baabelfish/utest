@@ -2,16 +2,18 @@
 
 #include "exception.hpp"
 
-#define Assert() Assertion(false, __LINE__)
-#define Fatal() Assertion(true, __LINE__)
+#define Assert() Assertion(false, __FILE__, __LINE__)
+#define Fatal() Assertion(true, __FILE__, __LINE__)
 
 class Assertion {
     bool m_fatal;
+    std::string m_file;
     int m_line;
 
     void throwEx(std::string type) {
         Exception ex;
         ex.type = m_fatal ? Type::Fatal : Type::Error;
+        ex.file = m_file;
         ex.line = m_line;
         ex.reason = type;
         throw ex;
@@ -19,10 +21,11 @@ class Assertion {
 
 public:
     Assertion(bool fatal = false):
-        Assertion(fatal, -1) {}
+        Assertion(fatal, "", -1) {}
 
-    Assertion(bool fatal, int line):
+    Assertion(bool fatal, std::string file, int line):
         m_fatal(fatal),
+        m_file(file),
         m_line(line) {}
 
     virtual ~Assertion() {}

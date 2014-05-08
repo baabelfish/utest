@@ -1,24 +1,26 @@
 uTest
 =====
 
-A simple test "library" for lazy people who don't like writing tests.
+A simple test "library" for lazy (simple) people who don't like writing tests.
 
 # Usage
-- Create a test `something_test.cpp`:
+- Create files
 
 ```cpp
+// footests.cpp
+
 // Include it
 #include "utest.hpp"
 
 // Initialize a package
-uTestPackage() {
+uTestPackage pkg() {
     describe("Foo", []{
         int x = 5;
         std::vector<int> y{1, 2, 3};
 
         it("can Bar", [=]{
             x = 1;
-            Warn(x == 1);
+            Warn(x == 2);
             Assert().isEqual(x, 1);
         })
 
@@ -30,18 +32,35 @@ uTestPackage() {
         })
     });
 }
-
-uTestLaunch();
 ```
-- More comprehensive test: [case.cpp](/examples/tests.cpp) [case.cpp](/examples/case.cpp) (compiled with: `clang++ -std=c++11 -o runner examples/tests.cpp examples/case.cpp`)
+
+```cpp
+// runner.cpp
+uTestRun();
+```
+
 - Compile and run:
 ```bash
-g++ -std=c++11 -o runner something_test.cpp && ./runner
+g++ -std=c++11 -o runner footests.cpp runner.cpp && ./runner
 ```
-- Run multiple tests:
+- Run all tests:
 ```bash
 for i in $(find *_test.cpp); do g++ -std=c++11 -o runner $i && ./runner; done
 ```
+
+- More complex example of a runner with automated check for changes
+```bash
+while true; do
+    make tests && clear && ./target/sge
+    if [[ $(which inotifywait) == "" ]]; then
+        sleep 5
+    else
+        change=$(inotifywait -r -e close_write,moved_to,create . 2> /dev/null)
+    fi
+done
+```
+
+- More comprehensive test files: [case.cpp](/examples/tests.cpp) [case.cpp](/examples/case.cpp) (compiled with: `clang++ -std=c++11 -o runner examples/tests.cpp examples/case.cpp`)
 
 # Todo
 - Add timeout

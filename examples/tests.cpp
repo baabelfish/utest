@@ -1,6 +1,6 @@
 #include "../utest.hpp"
 
-uTestPackage([]{
+uTestPackage pkg([]{
     describe("asd", []{
         it("qwe", []{
             Assert()

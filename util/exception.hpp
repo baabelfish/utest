@@ -11,5 +11,6 @@ enum class Type {
 struct Exception : std::exception {
     Type type;
     std::string reason;
+    std::string file;
     int line;
 };

@@ -24,7 +24,7 @@ void abstract() {
     });
 }
 
-uTestPackage([]{
+uTestPackage vecs([]{
     describe("std::vector", abstract<std::vector<int>>);
     describe("std::deque", abstract<std::deque<int>>);
 
@@ -37,7 +37,6 @@ uTestPackage([]{
                 .forAll(vec, [](int a) { return a < 2; })
                 .forSome(vec, [](int a) { return a == 2; })
                 .forNone(vec, [](int a) { return a == 1; });
-
         });
 
         it("can transform", [=]{
