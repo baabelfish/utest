@@ -1,4 +1,4 @@
-uTest ![Travis](https://travis-ci.org/baabelfish/utest.svg)
+uTest [![Build Status](https://travis-ci.org/baabelfish/utest.svg?branch=master)](https://travis-ci.org/baabelfish/utest) [![Coverage Status](https://coveralls.io/repos/baabelfish/utest/badge.png)](https://coveralls.io/r/baabelfish/utest)
 =====
 
 A simple test "library" for lazy (simple) people who don't like writing tests.
