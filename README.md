@@ -5,15 +5,12 @@ A simple test "library" for lazy (simple) people who don't like writing tests.
 
 
 # Usage
-- Create files
+## Creating tests
 
+- File ``footests.cpp``
 ```cpp
-// footests.cpp
+#include "path/to/utest.hpp"
 
-// Include it
-#include "utest.hpp"
-
-// Initialize a package
 uTestPackage pkg() {
     describe("Foo", []{
         int x = 5;
@@ -35,21 +32,27 @@ uTestPackage pkg() {
 }
 ```
 
+- File ``runner.cpp``
 ```cpp
-// runner.cpp
+#include "path/to/utest.hpp"
 uTestRun();
 ```
 
-- Compile and run:
+- Compile:
 ```bash
-g++ -std=c++11 -o runner footests.cpp runner.cpp && ./runner
+g++ -std=c++11 -o runner footests.cpp runner.cpp
+./runner
 ```
-- Run all tests:
+
+- Check tests for more examples: [tests.cpp](/tests/tests.cpp)
+
+## Running tests
+- Simple:
 ```bash
 for i in $(find *_test.cpp); do g++ -std=c++11 -o runner $i && ./runner; done
 ```
 
-- More complex example of a runner with automated check for changes
+- Checking changes in files:
 ```bash
 while true; do
     make tests && clear && ./utests
@@ -60,5 +63,3 @@ while true; do
     fi
 done
 ```
-
-- More comprehensive test files: [case.cpp](/examples/tests.cpp) [case.cpp](/examples/case.cpp) (compiled with: `clang++ -std=c++11 -o runner examples/tests.cpp examples/case.cpp`)
