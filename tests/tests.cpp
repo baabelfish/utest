@@ -22,16 +22,26 @@ uTestPackage basic([]{
 });
 
 uTestPackage containerOverContainer([]{
-    // describe("container over container", []{
-    //     it("", []{
-    //     });
-    // });
+    describe("Multiple input and output", []{
+        it("can do basic checks", []{
+             multiple(
+                [](int a) -> int { return a * 2; },
+                {1, 2, 3, 4},
+                {2, 4, 6, 8});
+        });
+        it("can handle type change", []{
+             multiple(
+                [](int a) -> std::string { return std::to_string(a * 2); },
+                {1, 2, 3, 4},
+                {"2", "4", "6", "8"});
+        });
+    });
 });
 
 uTestPackage timing([]{
     describe("fasterThan", []{
         it("can determine the faster one", []{
-            fasterThan("sum of 100 is faster than sum of 1000",
+            isFasterThan("sum of 100 is faster than sum of 1000",
             []{
                 int sum = 0;
                 for (std::size_t i = 0; i < 100; ++i) { sum += i; }

@@ -1,8 +1,9 @@
 #!/bin/bash
 clear
+cd tests
 while true; do
     clear
-    make && clear && ./utests
+	clang++ -o utests *.cpp -std=gnu++11 && clear && ./utests
 
     if [[ $(which inotifywait) == "" ]]; then
         sleep 5

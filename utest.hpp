@@ -4,6 +4,7 @@
 #include "util/exception.hpp"
 #include "util/misc.hpp"
 #include "util/ut.hpp"
+#include <vector>
 
 struct uTestPackage {
     uTestPackage(std::function<void()> p) { p(); }
@@ -15,7 +16,9 @@ void describe(std::string description, F f) { ut::describe(description, f); }
 template<typename F>
 void it(std::string description, F f) { ut::it(description, f); }
 
-#define fasterThan(...) ut::fasterThan(__FILE__, __LINE__, __VA_ARGS__)
+#define isFasterThan(...) ut::isFasterThan(__FILE__, __LINE__, __VA_ARGS__)
+
+#define multiple(...) ut::multiple(__FILE__, __LINE__, __VA_ARGS__)
 
 #define Warn(CONDITION)\
 if (!(CONDITION)) {\
@@ -28,4 +31,4 @@ if (!(CONDITION)) {\
         << std::endl;\
 }
 
-#define uTestRun() int main() {}
+#define uTestRun() int main() { std::cerr << "Done." << std::endl; }
