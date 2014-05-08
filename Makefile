@@ -1,2 +1,2 @@
 build:
-	g++ -o utests tests/*.cpp -std=c++11
+	clang++ -o utests tests/*.cpp -std=gnu++11
