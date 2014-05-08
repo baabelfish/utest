@@ -1,2 +1,2 @@
 language: cpp
-install: make && ./utests
+script: make && ./utests
