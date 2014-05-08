@@ -62,6 +62,3 @@ done
 ```
 
 - More comprehensive test files: [case.cpp](/examples/tests.cpp) [case.cpp](/examples/case.cpp) (compiled with: `clang++ -std=c++11 -o runner examples/tests.cpp examples/case.cpp`)
-
-# Todo
-- Support for container -> container testing
