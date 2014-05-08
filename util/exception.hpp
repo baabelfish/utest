@@ -6,6 +6,7 @@
 struct Exception : std::exception {
     enum class Type {
         Fatal,
+        Timing,
         Error
     };
 

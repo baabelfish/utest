@@ -1,6 +1,6 @@
 #include "../utest.hpp"
 
-uTestPackage pkg([]{
+uTestPackage basic([]{
     describe("asd", []{
         it("qwe", []{
             Assert()
@@ -8,7 +8,7 @@ uTestPackage pkg([]{
                 .isTrue(false)
                 .isFalse(true)
                 .isFalse(false)
-                .isEqual(true, false);
+                .isEqual(true, true);
         });
     });
 });

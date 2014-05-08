@@ -15,6 +15,8 @@ void describe(std::string description, F f) { ut::describe(description, f); }
 template<typename F>
 void it(std::string description, F f) { ut::it(description, f); }
 
+#define fasterThan(...) ut::fasterThan(__FILE__, __LINE__, __VA_ARGS__)
+
 #define Warn(CONDITION)\
 if (!(CONDITION)) {\
     std::cerr\
