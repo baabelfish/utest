@@ -3,6 +3,8 @@ uTest
 
 A simple test "library" for lazy (simple) people who don't like writing tests.
 
+![Travis](https://travis-ci.org/baabelfish/utest.svg)
+
 # Usage
 - Create files
 
