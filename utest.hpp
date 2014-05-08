@@ -10,10 +10,10 @@ struct uTestPackage {
 };
 
 template<typename F>
-void describe(std::string d, F f) { ut::describe(d, f); }
+void describe(std::string description, F f) { ut::describe(description, f); }
 
 template<typename F>
-void it(std::string d, F f) { ut::it(d, f); }
+void it(std::string description, F f) { ut::it(description, f); }
 
 #define Warn(CONDITION)\
 if (!(CONDITION)) {\

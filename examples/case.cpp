@@ -33,6 +33,7 @@ uTestPackage vecs([]{
 
         it("works", [=]{
             Assert()
+                .isFalse(vec.empty())
                 .isEqual(vec.size(), (std::size_t)4)
                 .forAll(vec, [](int a) { return a < 2; })
                 .forSome(vec, [](int a) { return a == 2; })
