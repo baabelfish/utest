@@ -51,7 +51,7 @@ for i in $(find *_test.cpp); do g++ -std=c++11 -o runner $i && ./runner; done
 - More complex example of a runner with automated check for changes
 ```bash
 while true; do
-    make tests && clear && ./target/sge
+    make tests && clear && ./utests
     if [[ $(which inotifywait) == "" ]]; then
         sleep 5
     else
