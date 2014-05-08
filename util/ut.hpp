@@ -34,7 +34,7 @@ public:
 
     static void printAssertion(Exception& e) {
         printHeader(e.file, CurrentDescription, CurrentTest);
-        if (e.type == Type::Error) { std::cerr << Color::RED << "Assertion"; }
+        if (e.type == Exception::Type::Error) { std::cerr << Color::RED << "Assertion"; }
         else { std::cerr << Color::BOLD << Color::RED << "Fatal assertion"; }
         if (!e.reason.empty()) {
             std::cerr
@@ -56,7 +56,7 @@ public:
             f();
         } catch (Exception& e) {
             ++Failed;
-            if (e.type == Type::Error) {
+            if (e.type == Exception::Type::Error) {
                 printAssertion(e);
             } else {
                 printAssertion(e);

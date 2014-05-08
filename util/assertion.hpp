@@ -12,7 +12,7 @@ class Assertion {
 
     void throwEx(std::string type) {
         Exception ex;
-        ex.type = m_fatal ? Type::Fatal : Type::Error;
+        ex.type = m_fatal ? Exception::Type::Fatal : Exception::Type::Error;
         ex.file = m_file;
         ex.line = m_line;
         ex.reason = type;

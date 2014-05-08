@@ -3,12 +3,12 @@
 #include <string>
 #include <exception>
 
-enum class Type {
-    Fatal,
-    Error
-};
-
 struct Exception : std::exception {
+    enum class Type {
+        Fatal,
+        Error
+    };
+
     Type type;
     std::string reason;
     std::string file;
