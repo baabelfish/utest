@@ -6,10 +6,6 @@
 #include "util/ut.hpp"
 #include <vector>
 
-struct yTestPackage {
-    yTestPackage(std::function<void()> p) { p(); }
-};
-
 template<typename F>
 void describe(std::string description, F f) { ut::describe(description, f); }
 
@@ -31,4 +27,6 @@ if (!(CONDITION)) {\
         << std::endl;\
 }
 
-#define yTestRun() int main() { std::cerr << "Done." << std::endl; }
+#define yTestRun() int main() {\
+    ut::printTotals();\
+}

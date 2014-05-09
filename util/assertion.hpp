@@ -1,6 +1,7 @@
 #pragma once
 
 #include "exception.hpp"
+#include "ut.hpp"
 
 #define Assert() Assertion(false, __FILE__, __LINE__)
 #define Fatal() Assertion(true, __FILE__, __LINE__)
@@ -26,7 +27,9 @@ public:
     Assertion(bool fatal, std::string file, int line):
         m_fatal(fatal),
         m_file(file),
-        m_line(line) {}
+        m_line(line) {
+            ++ut::Results.total_assertions;
+        }
 
     virtual ~Assertion() {}
 

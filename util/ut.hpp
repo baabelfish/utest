@@ -9,17 +9,26 @@
 #include <chrono>
 
 namespace {
-    struct Description {
-        std::string description;
-        std::function<void()> func;
-    };
+struct Description {
+    std::string description;
+    std::function<void()> func;
+};
+
+struct Result {
+    std::size_t total_packages;
+    std::size_t total_descriptions;
+    std::size_t total_its;
+    std::size_t total_assertions;
+    std::size_t failed_assertions;
+};
 
 class ut {
-    static int Failed;
     static std::string CurrentDescription;
     static std::string CurrentTest;
 
 public:
+    static Result Results;
+
     template<typename F>
     class Tester {
         std::string m_file;
@@ -98,16 +107,18 @@ public:
 
     static void describe(std::string description, std::function<void()> f) {
         CurrentDescription = description;
+        ++Results.total_descriptions;
         f();
     }
 
     static void it(std::string description, std::function<void()> f) {
         CurrentTest = description;
+        ++Results.total_its;
 
         try {
             f();
         } catch (Exception& e) {
-            ++Failed;
+            ++ut::Results.failed_assertions;
             if (e.type != Exception::Type::Fatal && e.type != Exception::Type::Logic) {
                 printAssertion(e);
             } else {
@@ -155,9 +166,26 @@ public:
             }
         });
     }
+
+    static void printTotals() {
+        if (Results.failed_assertions == 0) { std::cerr << Color::GREEN; }
+        else { std::cerr << Color::RED; }
+        std::cerr<< "Tested "
+            << Results.total_packages << " packages with "
+            << Results.total_assertions - Results.failed_assertions
+                << "/" << Results.total_assertions << " succesful assertions.";
+        std::cerr << Color::DEFAULT << std::endl;
+    }
 };
 
-int ut::Failed = 0;
 std::string ut::CurrentDescription;
 std::string ut::CurrentTest;
+Result ut::Results;
 }
+
+struct yTestPackage {
+    yTestPackage(std::function<void()> p) {
+        ++ut::Results.total_packages;
+        p();
+    }
+};
