@@ -48,18 +48,20 @@ yTestPackage MultipleChecks([]{
     });
 });
 
+std::function<void()> createSummer(std::size_t amount) {
+    return [=]{
+        int sum = 0;
+        for (std::size_t i = 0; i < amount; ++i) { sum += i; }
+    };
+}
+
 yTestPackage timing([]{
     describe("fasterThan", []{
-        it("can determine the faster one", []{
-            isFasterThan("sum of 100 is faster than sum of 1000",
-            []{
-                int sum = 0;
-                for (std::size_t i = 0; i < 100; ++i) { sum += i; }
-            },
-            []{
-                int sum = 0;
-                for (std::size_t i = 0; i < 1000; ++i) { sum += i; }
-            });
+        it("can determine the faster one", [=]{
+            isFasterThan("sum of 100 is faster than sum of 1000", createSummer(100), createSummer(1000));
+        });
+        it("works with a margin", [=]{
+            isFasterThan("sum of 100 is faster than sum of 1000", createSummer(100), createSummer(1000), 0.5);
         });
     });
 });
