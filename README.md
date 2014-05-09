@@ -14,19 +14,9 @@ A simple test "library" for lazy (simple) people who don't like writing tests.
 yTestPackage pkg() {
     describe("Foo", []{
         int x = 5;
-        std::vector<int> y{1, 2, 3};
-
         it("can Bar", [=]{
             x = 1;
-            Warn(x == 2);
             Assert().isEqual(x, 1);
-        })
-
-        it("can Vec", [=]{
-            Assert()
-                .isTrue(y.empty())
-                .isEqual(y.size(), (std::size_t)3))
-                .forAll(y, [](int e) { return e < 4; });
         })
     });
 }
