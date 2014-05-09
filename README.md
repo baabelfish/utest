@@ -1,4 +1,4 @@
-yTest [![Build Status](https://travis-ci.org/baabelfish/ytest.svg?branch=master)](https://travis-ci.org/baabelfish/ytest) [![Coverage Status](https://coveralls.io/repos/baabelfish/ytest/badge.png)](https://coveralls.io/r/baabelfish/ytest)
+yTest [![Build Status](https://travis-ci.org/baabelfish/ytest.svg?branch=master)](https://travis-ci.org/baabelfish/ytest) [![Coverage Status](https://coveralls.io/repos/baabelfish/ytest/badge.png?branch=master)](https://coveralls.io/r/baabelfish/ytest?branch=master)
 =====
 
 A simple test "library" for lazy (simple) people who don't like writing tests.
