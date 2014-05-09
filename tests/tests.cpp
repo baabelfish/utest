@@ -37,6 +37,14 @@ uTestPackage MultipleChecks([]{
             .with(3, 1, "2")
             .with(10, 5, "5");
         });
+        it("Works with validator function", []{
+            bomb([](int a, std::string b) -> int {
+                return a + std::stoi(b);
+            })
+            .validate([](int a) {
+                return a < 5;
+            }, 1, "2");
+        });
     });
 });
 
