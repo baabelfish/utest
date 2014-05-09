@@ -1,8 +1,8 @@
-#include "../utest.hpp"
+#include "../ytest.hpp"
 
 #include <vector>
 
-uTestPackage basic([]{
+yTestPackage basic([]{
     describe("Assertion", []{
         it("can handle simple assertions", []{
             Assert()
@@ -21,7 +21,7 @@ uTestPackage basic([]{
     });
 });
 
-uTestPackage MultipleChecks([]{
+yTestPackage MultipleChecks([]{
     describe("Multiple checks", []{
         it("Works with ()-operator", []{
             bomb([](int a, int b) -> std::string {
@@ -48,7 +48,7 @@ uTestPackage MultipleChecks([]{
     });
 });
 
-uTestPackage timing([]{
+yTestPackage timing([]{
     describe("fasterThan", []{
         it("can determine the faster one", []{
             isFasterThan("sum of 100 is faster than sum of 1000",
@@ -64,4 +64,12 @@ uTestPackage timing([]{
     });
 });
 
-uTestRun();
+yTestPackage misc([]{
+    describe("Warning", []{
+        it("doesn't trigger fail with CI", []{
+            Warn(1 == 2);
+        });
+    });
+});
+
+yTestRun();

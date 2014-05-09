@@ -1,4 +1,4 @@
-uTest [![Build Status](https://travis-ci.org/baabelfish/utest.svg?branch=master)](https://travis-ci.org/baabelfish/utest) [![Coverage Status](https://coveralls.io/repos/baabelfish/utest/badge.png)](https://coveralls.io/r/baabelfish/utest)
+yTest [![Build Status](https://travis-ci.org/baabelfish/ytest.svg?branch=master)](https://travis-ci.org/baabelfish/ytest) [![Coverage Status](https://coveralls.io/repos/baabelfish/ytest/badge.png)](https://coveralls.io/r/baabelfish/ytest)
 =====
 
 A simple test "library" for lazy (simple) people who don't like writing tests.
@@ -9,9 +9,9 @@ A simple test "library" for lazy (simple) people who don't like writing tests.
 
 - File ``footests.cpp``
 ```cpp
-#include "path/to/utest.hpp"
+#include "path/to/ytest.hpp"
 
-uTestPackage pkg() {
+yTestPackage pkg() {
     describe("Foo", []{
         int x = 5;
         std::vector<int> y{1, 2, 3};
@@ -34,8 +34,8 @@ uTestPackage pkg() {
 
 - File ``runner.cpp``
 ```cpp
-#include "path/to/utest.hpp"
-uTestRun();
+#include "path/to/ytest.hpp"
+yTestRun();
 ```
 
 - Compile:
@@ -55,7 +55,7 @@ for i in $(find *_test.cpp); do g++ -std=c++11 -o runner $i && ./runner; done
 - Checking changes in files:
 ```bash
 while true; do
-    make tests && clear && ./utests
+    make tests && clear && ./ytests
     if [[ $(which inotifywait) == "" ]]; then
         sleep 5
     else
@@ -63,3 +63,7 @@ while true; do
     fi
 done
 ```
+
+## Documentation
+
+TODO

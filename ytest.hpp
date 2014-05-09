@@ -6,8 +6,8 @@
 #include "util/ut.hpp"
 #include <vector>
 
-struct uTestPackage {
-    uTestPackage(std::function<void()> p) { p(); }
+struct yTestPackage {
+    yTestPackage(std::function<void()> p) { p(); }
 };
 
 template<typename F>
@@ -31,4 +31,4 @@ if (!(CONDITION)) {\
         << std::endl;\
 }
 
-#define uTestRun() int main() { std::cerr << "Done." << std::endl; }
+#define yTestRun() int main() { std::cerr << "Done." << std::endl; }
