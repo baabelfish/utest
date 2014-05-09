@@ -1,6 +1,10 @@
 #include "../ytest.hpp"
 
 #include <vector>
+#include <deque>
+#include <list>
+
+#define cvt(...) decltype(__VA_ARGS__)::value_type
 
 yTestPackage basic([]{
     describe("Assertion", []{
@@ -14,9 +18,9 @@ yTestPackage basic([]{
         it("can do invariants", []{
             auto vec = std::vector<int>{1,2,3,4};
             Assert()
-                .forNone(vec, [](int i) { return i < 1 || i > 4; })
-                .forSome(vec, [](int i) { return i == 2; })
-                .forAll(vec, [](int i) { return i > 0 && i < 5; });
+                .forNone(vec, [](cvt(vec) i) { return i < 1 || i > 4; })
+                .forSome(vec, [](cvt(vec) i) { return i == 2; })
+                .forAll(vec, [](cvt(vec) i) { return i > 0 && i < 5; });
         });
     });
 });
@@ -72,6 +76,42 @@ yTestPackage misc([]{
             Warn(1 == 2);
         });
     });
+});
+
+template<typename T>
+void generics() {
+    T vec;
+
+    it("works when empty", [=]{
+        Assert()
+            .isTrue(vec.empty())
+            .isEqual(vec.size(), (std::size_t)0);
+    });
+
+    it("can push back", [=]{
+        T x = vec;
+        x.push_back(5);
+        x.push_back(10);
+        Assert()
+            .isFalse(x.empty())
+            .isEqual(x.size(), (std::size_t)2)
+            .isEqual(x, {5, 10});
+    });
+
+    it("can clear", [=]{
+        T x = vec;
+        x.clear();
+        Assert()
+            .isTrue(x.empty())
+            .isEqual(vec.size(), (std::size_t)0)
+            .isEqual(vec, {});
+    });
+}
+
+yTestPackage containers([]{
+    describe("std::vector", generics<std::vector<int>>);
+    describe("std::deque", generics<std::deque<int>>);
+    describe("std::list", generics<std::list<int>>);
 });
 
 yTestRun();
