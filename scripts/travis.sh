@@ -8,4 +8,4 @@ sudo apt-get -qq install libstdc++-4.8-dev
 sudo pip install cpp-coveralls
 
 cd tests
-make && ./utests && coveralls --exclude lib --exclude tests
+make && ./ytests && coveralls --exclude lib --exclude tests
