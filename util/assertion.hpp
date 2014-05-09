@@ -67,6 +67,18 @@ public:
         return *this;
     }
 
+    template<typename T, typename Y>
+    Assertion& isEqual(const T& a, const Y& b) {
+        if (a != static_cast<T>(b)) { throwEx("isEqual"); }
+        return *this;
+    }
+
+    template<typename T, typename Y>
+    Assertion& isNotEqual(const T& a, const Y& b) {
+        if (a == static_cast<T>(b)) { throwEx("isNotEqual"); }
+        return *this;
+    }
+
     template<typename T>
     Assertion& isTrue(const T& a) {
         if (a == false) { throwEx("isTrue"); }

@@ -85,7 +85,7 @@ void generics() {
     it("works when empty", [=]{
         Assert()
             .isTrue(vec.empty())
-            .isEqual(vec.size(), (std::size_t)0);
+            .isEqual(vec.size(), 0);
     });
 
     it("can push back", [=]{
@@ -94,7 +94,7 @@ void generics() {
         x.push_back(10);
         Assert()
             .isFalse(x.empty())
-            .isEqual(x.size(), (std::size_t)2)
+            .isEqual(x.size(), 2)
             .isEqual(x, {5, 10});
     });
 
@@ -103,7 +103,7 @@ void generics() {
         x.clear();
         Assert()
             .isTrue(x.empty())
-            .isEqual(vec.size(), (std::size_t)0)
+            .isEqual(vec.size(), 0)
             .isEqual(vec, {});
     });
 }
