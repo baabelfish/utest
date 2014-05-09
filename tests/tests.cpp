@@ -21,19 +21,21 @@ uTestPackage basic([]{
     });
 });
 
-uTestPackage containerOverContainer([]{
-    describe("Multiple input and output", []{
-        it("can do basic checks", []{
-             multiple(
-                [](int a) -> int { return a * 2; },
-                {1, 2, 3, 4},
-                {2, 4, 6, 8});
+uTestPackage MultipleChecks([]{
+    describe("Multiple checks", []{
+        it("Works with ()-operator", []{
+            bomb([](int a, int b) -> std::string {
+                return std::to_string(a + b);
+            })
+            ("5", 2, 3)
+            ("10", 5, 5);
         });
-        it("can handle type change", []{
-             multiple(
-                [](int a) -> std::string { return std::to_string(a * 2); },
-                {1, 2, 3, 4},
-                {"2", "4", "6", "8"});
+        it("Works with member function", []{
+            bomb([](int a, std::string b) -> int {
+                return a + std::stoi(b);
+            })
+            .with(3, 1, "2")
+            .with(10, 5, "5");
         });
     });
 });

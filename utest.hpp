@@ -18,7 +18,7 @@ void it(std::string description, F f) { ut::it(description, f); }
 
 #define isFasterThan(...) ut::isFasterThan(__FILE__, __LINE__, __VA_ARGS__)
 
-#define multiple(...) ut::multiple(__FILE__, __LINE__, __VA_ARGS__)
+#define bomb(...) ut::bomb(__FILE__, __LINE__, __VA_ARGS__)
 
 #define Warn(CONDITION)\
 if (!(CONDITION)) {\

@@ -20,6 +20,37 @@ class ut {
     static std::string CurrentTest;
 
 public:
+    template<typename F>
+    struct Tester {
+        std::string m_file;
+        int m_line;
+        std::size_t m_current;
+        F m_f;
+
+        Tester(std::string file, int line, F f):
+            m_file(file),
+            m_line(line),
+            m_current(1),
+            m_f(f) {}
+
+        template<typename R, typename... Args>
+        Tester<F>& operator()(R reval, Args... args) {
+            if (m_f(args...) != reval) {
+                throw Exception(Exception::Type::Error,
+                        "Error with case " + std::to_string(m_current),
+                        m_file,
+                        m_line);
+            }
+            ++m_current;
+            return *this;
+        }
+
+        template<typename R, typename... Args>
+        Tester<F>& with(R reval, Args... args) {
+            return (*this)(reval, args...);
+        }
+    };
+
     static std::string lineNumber(int number) {
         if (number > 0) { return " ( " + std::to_string(number) + ")"; }
         return "";
@@ -73,27 +104,8 @@ public:
         }
     }
 
-    template<typename F, typename T, typename R>
-    static void multiple(std::string file, int line, F f, std::initializer_list<T> input, std::initializer_list<R> expected) {
-        if (input.size() != expected.size()) {
-            throw Exception(Exception::Type::Logic, "Parameters input and expected of multiple needs to of the same size.", file, line);
-        }
-
-        auto iit = input.begin();
-        auto eit = expected.begin();
-        std::size_t index = 0;
-        while (iit != input.end() && eit != expected.end()) {
-            if (*eit != f(*iit)) {
-                throw Exception(Exception::Type::Error,
-                        "Multiple failed at index: " + std::to_string(index),
-                        file,
-                        line);
-            }
-            ++index;
-            ++iit;
-            ++eit;
-        }
-    }
+    template<typename F>
+    static Tester<F> bomb(std::string file, int line, F f) { return Tester<F>(file, line, f); }
 
     template<typename F, typename G>
     static void isFasterThan(std::string file, int line, std::string description, F f, G g, std::size_t times = 100) {
