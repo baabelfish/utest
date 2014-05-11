@@ -17,16 +17,9 @@ void it(std::string description, F f) { ut::it(description, f); }
 #define bomb(...) ut::bomb(__FILE__, __LINE__, __VA_ARGS__)
 
 #define Warn(CONDITION)\
-if (!(CONDITION)) {\
-    std::cerr\
-        << "[" << __FILE__ << "] "\
-        << Color::YELLOW + "Warning: " + Color::DEFAULT\
-        << Color::DEFAULT\
-        << "\"" << (#CONDITION) << "\"" \
-        << ut::lineNumber(__LINE__)\
-        << std::endl;\
-}
+if (!(CONDITION)) { ytest::print::warning(#CONDITION, __FILE__, __LINE__); }
 
-#define yTestRun() int main() {\
-    ut::printTotals();\
+#define yTestExec()\
+int main(int argc, char* argv[]) {\
+    return ut::exec(argc, argv);\
 }

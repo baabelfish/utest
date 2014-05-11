@@ -4,31 +4,18 @@
 #include <string>
 #include <functional>
 #include <iostream>
+#include <chrono>
 #include "exception.hpp"
 #include "misc.hpp"
-#include <chrono>
+#include "globals.hpp"
+#include "print.hpp"
 
 namespace {
-struct Description {
-    std::string description;
-    std::function<void()> func;
-};
-
-struct Result {
-    std::size_t total_packages;
-    std::size_t total_descriptions;
-    std::size_t total_its;
-    std::size_t total_assertions;
-    std::size_t failed_assertions;
-};
-
 class ut {
     static std::string CurrentDescription;
     static std::string CurrentTest;
 
 public:
-    static Result Results;
-
     template<typename F>
     class Tester {
         std::string m_file;
@@ -73,58 +60,21 @@ public:
         }
     };
 
-    static std::string lineNumber(int number) {
-        if (number > 0) { return " ( " + std::to_string(number) + ")"; }
-        return "";
-    }
-
-    static void printHeader(std::string file, std::string description, std::string current_test) {
-        std::cerr
-            << "[" << file << "] "
-            << Color::WHITE
-            << "(" << description
-            << " | " << current_test
-            << ") ";
-    }
-
-    static void printAssertion(Exception& e) {
-        printHeader(e.file, CurrentDescription, CurrentTest);
-        if (e.type == Exception::Type::Error) { std::cerr << Color::RED << "Assertion"; }
-        else if (e.type == Exception::Type::Timing) { std::cerr << Color::MAGENTA << "Timing"; }
-        else if (e.type == Exception::Type::Logic) { std::cerr << Color::MAGENTA << Color::BOLD << Color::UNDERLINE << "Logic"; }
-        else { std::cerr << Color::BOLD << Color::RED << "Fatal assertion"; }
-
-        std::cerr << Color::DEFAULT;
-
-        if (!e.reason.empty()) {
-            std::cerr
-                << ": "
-                << Color::DEFAULT
-                << e.reason;
-        }
-        std::cerr << lineNumber(e.line) << std::endl;
-    }
-
     static void describe(std::string description, std::function<void()> f) {
-        CurrentDescription = description;
-        ++Results.total_descriptions;
-        f();
+        ++ytest::globals::results().total_descriptions;
+        ytest::globals::tests().emplace_back(description, f);
     }
 
     static void it(std::string description, std::function<void()> f) {
         CurrentTest = description;
-        ++Results.total_its;
+        ++ytest::globals::results().total_its;
 
         try {
             f();
         } catch (Exception& e) {
-            ++ut::Results.failed_assertions;
-            if (e.type != Exception::Type::Fatal && e.type != Exception::Type::Logic) {
-                printAssertion(e);
-            } else {
-                printAssertion(e);
-                throw e;
-            }
+            ++ytest::globals::results().failed_assertions;
+            ytest::print::assertion(e, CurrentDescription, CurrentTest);
+            if (e.type == Exception::Type::Fatal || e.type == Exception::Type::Logic) { throw e; }
         }
     }
 
@@ -167,25 +117,27 @@ public:
         });
     }
 
-    static void printTotals() {
-        if (Results.failed_assertions == 0) { std::cerr << Color::GREEN; }
-        else { std::cerr << Color::RED; }
-        std::cerr<< "Tested "
-            << Results.total_packages << " packages with "
-            << Results.total_assertions - Results.failed_assertions
-                << "/" << Results.total_assertions << " succesful assertions.";
-        std::cerr << Color::DEFAULT << std::endl;
+    static int exec(int argc, char* argv[]) {
+        for (auto& x : ytest::globals::tests()) {
+            CurrentDescription = x.description;
+            try { x.func(); }
+            catch (Exception& e) {
+                std::cerr << "Asserts should be inside it-blocks" << std::endl;
+                return 2;
+            }
+        }
+        ytest::print::totals(ytest::globals::results());
+        return 0;
     }
 };
 
 std::string ut::CurrentDescription;
 std::string ut::CurrentTest;
-Result ut::Results;
 }
 
 struct yTestPackage {
     yTestPackage(std::function<void()> p) {
-        ++ut::Results.total_packages;
+        ++ytest::globals::results().total_packages;
         p();
     }
 };

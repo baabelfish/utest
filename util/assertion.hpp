@@ -28,7 +28,7 @@ public:
         m_fatal(fatal),
         m_file(file),
         m_line(line) {
-            ++ut::Results.total_assertions;
+            ++ytest::globals::results().total_assertions;
         }
 
     virtual ~Assertion() {}
