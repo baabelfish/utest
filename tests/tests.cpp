@@ -114,4 +114,4 @@ yTestPackage containers([]{
     describe("std::list", generics<std::list<int>>);
 });
 
-yTestRun();
+yTestExec();

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "exception.hpp"
-#include "ut.hpp"
+#include "globals.hpp"
 
 #define Assert() Assertion(false, __FILE__, __LINE__)
 #define Fatal() Assertion(true, __FILE__, __LINE__)
@@ -28,7 +28,7 @@ public:
         m_fatal(fatal),
         m_file(file),
         m_line(line) {
-            ++ut::Results.total_assertions;
+            ++ytest::globals::results().total_assertions;
         }
 
     virtual ~Assertion() {}
