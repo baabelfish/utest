@@ -1,8 +1,8 @@
 #include "../ytest.hpp"
 
 yTestPackage other([]{
-    describe("multiple files", []{
-        it("can handle multiple files", []{
+    describe("Assertion", []{
+        it("can handle simple assertions", []{
             Assert().isTrue(true);
         });
     });
