@@ -11,13 +11,13 @@ class Assertion {
     std::string m_file;
     int m_line;
 
-    void throwEx(std::string type) {
+    auto throwEx(std::string type) {
         Exception ex;
         ex.type = m_fatal ? Exception::Type::Fatal : Exception::Type::Error;
         ex.file = m_file;
         ex.line = m_line;
         ex.reason = type;
-        throw ex;
+        return ex;
     }
 
 public:
@@ -36,7 +36,7 @@ public:
     template<typename C, typename T = typename C::value_type, typename F>
     Assertion& forNone(const C& c, F f) {
         for (auto& x : c) {
-            if (f(x)) throwEx("forNone");
+            if (f(x)) throw throwEx("forNone");
         }
         return *this;
     }
@@ -46,51 +46,75 @@ public:
         for (auto& x : c) {
             if (f(x)) return *this;
         }
-        throwEx("forSome");
+        throw throwEx("forSome");
         return *this;
     }
 
     template<typename C, typename F>
     Assertion& forAll(const C& c, F f) {
         for (auto& x : c) {
-            if (!f(x)) throwEx("forAll");
+            if (!f(x)) throw throwEx("forAll");
         }
         return *this;
     }
 
     template<typename T>
     Assertion& isEqual(const T& a, const T& b) {
-        if (a != b) { throwEx("isEqual"); }
-        return *this;
+        if (a == b) return *this;
+        throw throwEx("isEqual");
     }
 
     template<typename T>
     Assertion& isNotEqual(const T& a, const T& b) {
-        if (a == b) { throwEx("isNotEqual"); }
-        return *this;
+        if (a != b) return *this;
+        throw throwEx("isNotEqual");
+    }
+
+    template<typename T, typename Y>
+    Assertion& isLessThan(const T& a, const Y& b) {
+        if (a < static_cast<T>(b)) return *this;
+        throw throwEx("isLessThan");
+    }
+
+    template<typename T, typename Y>
+    Assertion& isSameOrLessThan(const T& a, const Y& b) {
+        if (a <= static_cast<T>(b)) return *this;
+        throw throwEx("isSameOrLessThan");
+    }
+
+    template<typename T, typename Y>
+    Assertion& isSameOrGreaterThan(const T& a, const Y& b) {
+        if (a >= static_cast<T>(b)) return *this;
+        throw throwEx("isSameOrGreaterThan");
+    }
+
+    template<typename T, typename Y>
+    Assertion& isGreaterThan(const T& a, const Y& b) {
+        if (a > static_cast<T>(b)) return *this;
+        throw throwEx("isGreaterThan");
     }
 
     template<typename T, typename Y>
     Assertion& isEqual(const T& a, const Y& b) {
-        if (a != static_cast<T>(b)) { throwEx("isEqual"); }
-        return *this;
+        if (a == static_cast<T>(b)) return *this;
+        throw throwEx("isEqual");
     }
 
     template<typename T, typename Y>
     Assertion& isNotEqual(const T& a, const Y& b) {
-        if (a == static_cast<T>(b)) { throwEx("isNotEqual"); }
-        return *this;
+        if (a != static_cast<T>(b)) return *this;
+        throw throwEx("isNotEqual");
     }
 
     template<typename T>
     Assertion& isTrue(const T& a) {
-        if (a == false) { throwEx("isTrue"); }
-        return *this;
+        if (a == true) return *this;
+        throw throwEx("isTrue");
     }
 
     template<typename T>
     Assertion& isFalse(const T& a) {
-        if (a == true) { throwEx("isFalse"); }
-        return *this;
+        if (a == false) return *this;
+        throw throwEx("isFalse");
     }
 };
